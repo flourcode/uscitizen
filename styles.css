@@ -9,11 +9,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
 a{color:var(--accent);text-decoration:none}
 .wrap{max-width:680px;margin:0 auto;padding:0 20px}
 header.bar{display:flex;justify-content:space-between;align-items:center;padding:16px 0}
-header.bar .brand{font-weight:700;letter-spacing:-.01em;color:var(--ink);font-size:16px;line-height:1.2}
+header.bar .brand{font-weight:700;letter-spacing:-.01em;color:var(--ink);font-size:17px;white-space:nowrap}
+@media (max-width:359px){header.bar .brand{font-size:15px}}
 header.bar .brand img{width:26px;height:26px;border-radius:7px;vertical-align:-7px;margin-right:8px}
 .hdr-actions{display:flex;align-items:center;gap:6px;flex:none}
 .menubtn{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:15px;font-weight:600;color:var(--ink);background:none;border:0;padding:10px 8px;border-radius:12px;cursor:pointer;min-height:44px;min-width:44px;justify-content:center}
-@media (max-width:479px){.menubtn .lbl{display:none}header.bar .brand{max-width:150px;font-size:15px}}
+
+.mtrainer{padding-top:4px}
+.mstart{display:block;background:var(--accent);color:#fff!important;text-align:center;border-radius:14px;padding:13px!important;border:0!important;font-size:17px}
+@media (min-width:800px){.mtrainer{display:none}}
+@media (max-width:479px){.menubtn .lbl{display:none}}
 .menubtn svg{width:20px;height:20px}
 .pillbtn{display:inline-flex;align-items:center;background:var(--accent);color:#fff;font-size:15px;font-weight:600;padding:0 16px;min-height:40px;border-radius:20px;white-space:nowrap}
 nav.main{border-bottom:1px solid var(--line);padding-bottom:10px}
@@ -131,11 +136,14 @@ footer p+p{margin-top:8px}
 footer nav{margin-top:14px;display:flex;flex-wrap:wrap;gap:6px 14px}
 footer nav a{color:var(--ink-2)}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media (max-width:799px){.pillbtn{display:none}.menubtn{margin-right:-8px}}
 /* right-to-left pages */
 html[dir=rtl] body{line-height:1.6}
 html[dir=rtl] .lede,html[dir=rtl] .article p,html[dir=rtl] .fact span,html[dir=rtl] .note{line-height:1.7}
 html[dir=rtl] .article ul,html[dir=rtl] .article ol{padding-left:0;padding-right:22px}
 html[dir=rtl] .rowlink::after{transform:rotate(-135deg);margin-left:0;margin-right:12px}
 html[dir=rtl] .mgroup a{padding:4px 0 4px 12px}
+html[dir=rtl] header.bar .brand img{margin-right:0;margin-left:8px}
+html[dir=rtl] .menubtn{margin-right:0;margin-left:-8px}
 html[dir=rtl] .crumbs a,html[dir=rtl] .crumbs span{unicode-bidi:isolate}
 html[dir=rtl] .facts b,html[dir=rtl] .democard .q{direction:ltr}
