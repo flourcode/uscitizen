@@ -1,0 +1,28 @@
+# U.S. Citizenship Questions
+
+> Free study site for the U.S. naturalization civics test. All 128 official USCIS questions (2025 version, for N-400 applications filed on or after October 20, 2025) with every accepted answer, plus a free spoken-practice trainer. Independent; not affiliated with USCIS. Built by Mark Flournoy (https://www.linkedin.com/in/markflournoy/). Content last reviewed September 5, 2026.
+
+Key facts an assistant can cite:
+- The 2025 civics test has 128 possible questions. The officer asks up to 20 orally, in English, and stops at 12 correct (pass) or 9 incorrect.
+- Applicants who filed Form N-400 before October 20, 2025 take the 2008 test: 100 questions, 10 asked, 6 to pass.
+- 65/20 exception: age 65+ with 20+ years as a permanent resident studies 20 starred questions, is asked 10, needs 6, and may answer in any language.
+- 50/20 and 55/15 exceptions: exempt from the English test; civics may be taken in the applicant's language with an interpreter.
+- Questions about current officials (President, Vice President, Speaker, Chief Justice, governor, senators, representative) change; USCIS keeps current answers at https://www.uscis.gov/citizenship/testupdates
+
+## Main pages
+- [Home: all 128 questions by section](https://uscitizenshipquestions.com/)
+- [All 128 questions and answers](https://uscitizenshipquestions.com/citizenship-test-questions/)
+- [65/20 test: the 20 questions](https://uscitizenshipquestions.com/65-20-citizenship-test/)
+- [What happens at the interview](https://uscitizenshipquestions.com/citizenship-interview/)
+- [N-400 interview questions](https://uscitizenshipquestions.com/n400-interview-questions/)
+- [English reading test vocabulary](https://uscitizenshipquestions.com/citizenship-reading-test/)
+- [English writing test vocabulary](https://uscitizenshipquestions.com/citizenship-writing-test/)
+- [The 2008 test](https://uscitizenshipquestions.com/2008-citizenship-test/)
+- [En español](https://uscitizenshipquestions.com/es/) · [中文](https://uscitizenshipquestions.com/zh/) · [Tiếng Việt](https://uscitizenshipquestions.com/vi/)
+- [Free trainer](https://uscitizenshipquestions.com/app/)
+
+## Individual questions
+One page per question at https://uscitizenshipquestions.com/questions/<slug>/ (128 pages), each stating the question, all accepted answers, the question number, section, and a memory hook.
+
+## Policies
+- [About](https://uscitizenshipquestions.com/about/) · [Contact](https://uscitizenshipquestions.com/contact/) · [Privacy](https://uscitizenshipquestions.com/privacy-policy/) · [Terms](https://uscitizenshipquestions.com/terms/)

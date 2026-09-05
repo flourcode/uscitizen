@@ -1,0 +1,24 @@
+# Amplify response headers. Pages stay fresh; static assets are cached for a week.
+customHeaders:
+  - pattern: '**/*.html'
+    headers:
+      - key: Cache-Control
+        value: 'public, max-age=0, must-revalidate'
+  - pattern: '**/*.css'
+    headers:
+      - key: Cache-Control
+        value: 'public, max-age=604800'
+  - pattern: '**/*.svg'
+    headers:
+      - key: Cache-Control
+        value: 'public, max-age=604800'
+  - pattern: '**/*.png'
+    headers:
+      - key: Cache-Control
+        value: 'public, max-age=604800'
+  - pattern: '**/*'
+    headers:
+      - key: X-Content-Type-Options
+        value: nosniff
+      - key: Referrer-Policy
+        value: strict-origin-when-cross-origin
