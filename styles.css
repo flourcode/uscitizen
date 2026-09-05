@@ -9,16 +9,33 @@ body{font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-
 a{color:var(--accent);text-decoration:none}
 .wrap{max-width:680px;margin:0 auto;padding:0 20px}
 header.bar{display:flex;justify-content:space-between;align-items:center;padding:16px 0}
-nav.main{display:flex;gap:4px 18px;font-size:14px;font-weight:600;padding:0 0 8px;border-bottom:1px solid var(--line);overflow-x:auto;white-space:nowrap;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-nav.main::-webkit-scrollbar{display:none}
-@media (min-width:800px){nav.main{flex-wrap:wrap;overflow:visible;white-space:normal}}
-nav.main a{color:var(--ink-2);padding:6px 0}
-nav.main a[aria-current]{color:var(--ink)}
-nav.main .langs{margin-left:auto;display:flex;gap:14px;padding-left:14px;border-left:1px solid var(--line)}
-nav.main .langs a{color:var(--accent)}
-header.bar .brand{font-weight:700;letter-spacing:-.01em;color:var(--ink)}
+header.bar .brand{font-weight:700;letter-spacing:-.01em;color:var(--ink);font-size:16px;line-height:1.2}
 header.bar .brand img{width:26px;height:26px;border-radius:7px;vertical-align:-7px;margin-right:8px}
-header.bar a.small{font-size:15px;font-weight:600}
+.hdr-actions{display:flex;align-items:center;gap:6px;flex:none}
+.menubtn{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:15px;font-weight:600;color:var(--ink);background:none;border:0;padding:10px 8px;border-radius:12px;cursor:pointer;min-height:44px;min-width:44px;justify-content:center}
+@media (max-width:479px){.menubtn .lbl{display:none}header.bar .brand{max-width:150px;font-size:15px}}
+.menubtn svg{width:20px;height:20px}
+.pillbtn{display:inline-flex;align-items:center;background:var(--accent);color:#fff;font-size:15px;font-weight:600;padding:0 16px;min-height:40px;border-radius:20px;white-space:nowrap}
+nav.main{border-bottom:1px solid var(--line);padding-bottom:10px}
+nav.main .menulist{display:none;padding:6px 0 10px}
+nav.main.open .menulist{display:block}
+.mgroup{padding:8px 0}
+.mhead{font-size:12px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.mgroup a{display:block;font-size:17px;font-weight:600;color:var(--ink);padding:9px 0;border-bottom:1px solid var(--line)}
+.mgroup a:last-child{border-bottom:0}
+.mgroup a[aria-current]{color:var(--accent)}
+nav.main .langs{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px;font-weight:600;padding-top:2px}
+nav.main .langs a{color:var(--accent);padding:4px 0}
+nav.main .langs a[aria-current]{color:var(--ink)}
+@media (min-width:800px){
+  .menubtn{display:none}
+  nav.main .menulist{display:flex;gap:6px 36px;padding:8px 0 12px}
+  .mgroup{padding:0}
+  .mgroup a{display:inline-block;font-size:14px;color:var(--ink-2);padding:4px 12px 4px 0;border:0}
+  .mgroup a[aria-current]{color:var(--ink)}
+  .mhead{display:none}
+  nav.main .langs{font-size:14px}
+}
 .crumbs{font-size:13px;color:var(--ink-2);margin:8px 0 0}
 .crumbs a{color:var(--ink-2)}
 .crumbs span{margin:0 6px;color:var(--ink-3)}
@@ -101,6 +118,11 @@ details.faq p{color:var(--ink-2);margin-top:8px;font-size:15px}
 .prevnext a.next{text-align:right}
 .vocab{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 6px}
 .vocab span{background:var(--card);border-radius:10px;padding:6px 11px;font-size:15px;box-shadow:var(--shadow-2)}
+.teachcard{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:28px auto 0;max-width:680px;background:var(--card);border-radius:18px;padding:18px 20px;box-shadow:var(--shadow-2);color:var(--ink);border-left:5px solid var(--good)}
+.teachcard b{display:block;font-size:17px;margin-bottom:3px}
+.teachcard span{font-size:15px;color:var(--ink-2)}
+.teachcard .go{flex:none;color:var(--accent);font-weight:600;font-size:15px;white-space:nowrap}
+html[dir=rtl] .teachcard{border-left:0;border-right:5px solid var(--good)}
 .bottomcta{text-align:center;padding:40px 0 8px}
 .bottomcta h2{margin-bottom:6px}
 .bottomcta p{color:var(--ink-2)}
@@ -109,3 +131,11 @@ footer p+p{margin-top:8px}
 footer nav{margin-top:14px;display:flex;flex-wrap:wrap;gap:6px 14px}
 footer nav a{color:var(--ink-2)}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+/* right-to-left pages */
+html[dir=rtl] body{line-height:1.6}
+html[dir=rtl] .lede,html[dir=rtl] .article p,html[dir=rtl] .fact span,html[dir=rtl] .note{line-height:1.7}
+html[dir=rtl] .article ul,html[dir=rtl] .article ol{padding-left:0;padding-right:22px}
+html[dir=rtl] .rowlink::after{transform:rotate(-135deg);margin-left:0;margin-right:12px}
+html[dir=rtl] .mgroup a{padding:4px 0 4px 12px}
+html[dir=rtl] .crumbs a,html[dir=rtl] .crumbs span{unicode-bidi:isolate}
+html[dir=rtl] .facts b,html[dir=rtl] .democard .q{direction:ltr}
