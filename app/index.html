@@ -8,6 +8,7 @@
 <meta name="robots" content="noindex,follow">
 <link rel="manifest" href="../manifest.json"><link rel="icon" href="../icon.svg" type="image/svg+xml">
 <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<script src="../officials.js"></script>
 <script src="../analytics.js" defer></script>
 <style>
   :root{--bg:#f2f2f7;--card:#fff;--ink:#1c1c1e;--ink-2:#6e6e73;--ink-3:#aeaeb2;--line:rgba(60,60,67,.12);--accent:#0a7cff;--good:#34c759;--again:#ff3b30;--sheet:#fff;--well:#f2f2f7;
@@ -255,7 +256,7 @@ function renderTop(){
 /* ---------- card rendering ---------- */
 const card=$("#card"),controls=$("#controls");
 function needText(c){
-  if(c.vary)return [23,29,61,62].includes(c.n)?"Depends on where you live":"Depends on who holds office";
+  if(c.vary)return [23,29,61,62].includes(c.n)?"Depends on where you live":"Current officeholder";
   if(c.k>1)return "Give "+WORDS[c.k]+". These work, or any below.";
   return c.a.length>1?"Any one of these":"";
 }
@@ -267,7 +268,10 @@ function showCard(c){
   const st=stat(c.n);$("#f-hint").textContent=doneCount===0&&!st.ok&&!retrySet.size?"Say it out loud, then tap":(retrySet.has(c.n)?"One more time":"");
   $("#b-topic").textContent=c.s;$("#b-num").textContent="#"+c.n;$("#b-need").textContent=needText(c);
   const a=$("#b-a"),more=$("#b-more"),ownEl=$("#b-own"),inp=$("#b-input");
-  if(c.vary){a.style.display="none";more.innerHTML="";ownEl.style.display="";inp.value=S.own[c.n]||"";
+  const OFFQ={38:"president",39:"vicePresident",30:"speaker",57:"chiefJustice"};
+  if(c.vary&&OFFQ[c.n]&&window.OFFICIALS&&OFFICIALS[OFFQ[c.n]]){a.style.display="";a.textContent=OFFICIALS[OFFQ[c.n]];ownEl.style.display="none";
+    more.innerHTML='<div class="also">As of '+(OFFICIALS.asOf||"")+'. Changes with elections; confirm at uscis.gov/citizenship/testupdates the week of your interview.</div>';}
+  else if(c.vary){a.style.display="none";more.innerHTML="";ownEl.style.display="";inp.value=S.own[c.n]||"";
     inp.placeholder=c.n===62?"Your state capital":c.n===61?"Your governor":c.n===23?"One of your senators":c.n===29?"Your representative":"Current name";}
   else{const k=c.k||1,pick=c.a.slice(0,k);a.style.display="";a.textContent=k>1?pick.slice(0,-1).join(", ")+(k>2?",":"")+" and "+pick[k-1]:pick[0];
     ownEl.style.display="none";const rest=c.a.slice(k);
@@ -347,7 +351,7 @@ function say(text,btn){if(!canSpeak)return;speechSynthesis.cancel();const u=new 
   if(btn){btn.classList.add("on");u.onend=u.onerror=()=>btn.classList.remove("on");}speechSynthesis.speak(u);}
 if(!canSpeak){$("#f-speak").style.display="none";$("#b-speak").style.display="none";$("#voice-toggle").style.visibility="hidden";}
 $("#f-speak").addEventListener("click",e=>{e.stopPropagation();if(cur)say(cur.q,e.currentTarget);});
-function answerText(){return cur.vary?(S.own[cur.n]||"Type your answer first"):$("#b-a").textContent;}
+function answerText(){if(cur.vary&&$("#b-own").style.display!=="none")return S.own[cur.n]||"Type your answer first";return $("#b-a").textContent;}
 $("#b-speak").addEventListener("click",e=>{e.stopPropagation();if(!cur)return;say(answerText(),e.currentTarget);});
 $("#b-input").addEventListener("input",e=>{if(cur){S.own[cur.n]=e.target.value.trim();save();}});
 $("#b-input").addEventListener("keydown",e=>{if(e.key==="Enter")e.target.blur();e.stopPropagation();});

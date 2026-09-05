@@ -4,6 +4,10 @@ customHeaders:
     headers:
       - key: Cache-Control
         value: 'public, max-age=0, must-revalidate'
+  - pattern: 'officials.js'
+    headers:
+      - key: Cache-Control
+        value: 'public, max-age=0, must-revalidate'
   - pattern: '**/*.css'
     headers:
       - key: Cache-Control
