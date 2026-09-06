@@ -1,4 +1,4 @@
-# U.S. Citizenship Questions
+# CitizenshipPal
 User-agent: *
 Allow: /
 Disallow: /app/
@@ -21,4 +21,4 @@ Allow: /
 User-agent: Applebot-Extended
 Allow: /
 
-Sitemap: https://uscitizenshipquestions.com/sitemap.xml
+Sitemap: https://citizenshippal.com/sitemap.xml

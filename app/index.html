@@ -4,10 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="color-scheme" content="light dark">
-<title>Citizenship Interview Trainer</title>
-<meta name="robots" content="noindex,follow">
-<link rel="manifest" href="../manifest.json"><link rel="icon" href="../icon.svg" type="image/svg+xml">
-<meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<title>CitizenshipPal: Citizenship Interview Trainer</title>
 <script src="../officials.js"></script>
 <script src="../analytics.js" defer></script>
 <style>
@@ -179,7 +176,8 @@
 <div class="scrim" id="scrim"></div>
 <div class="sheet" id="sheet" role="dialog" aria-label="Rounds and settings">
   <div class="grab"></div>
-  <h2>Citizenship Interview Trainer</h2>
+  <h2 style="display:flex;align-items:center;gap:10px"><svg viewBox="0 0 40 40" width="32" height="32" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#7CB583"/><circle cx="14" cy="16" r="2.4" fill="#2D5033"/><circle cx="26" cy="16" r="2.4" fill="#2D5033"/><path d="M12 24 Q20 31 28 24" fill="none" stroke="#2D5033" stroke-width="2.8" stroke-linecap="round"/></svg>CitizenshipPal</h2>
+  <p class="lead" style="margin:-2px 0 14px">Citizenship Interview Trainer</p>
   <p class="lead" id="lead"></p>
   <h3>Rounds</h3>
   <div class="group" id="rounds"></div>
@@ -331,7 +329,7 @@ function celebrate(){
   else if(!next){h="All "+N+" done.";p="You've been through every question. Now the review rounds keep them sharp.";cta="Tap to review what you missed";}
   else{h=missesThisRound?"Round complete.":"Clean round.";p=(missesThisRound?"Missed "+missesThisRound+", then got them all. ":"No misses. ")+L+" of "+N+" learned.";cta="Next: "+next.title+(next.sub?" "+next.sub:"");}
   $("#f-topic").textContent="";$("#f-num").textContent="";$("#f-retry").textContent="";$("#f-speak").style.visibility="hidden";$("#f-hint").textContent="";$("#f-es").textContent="";
-  $("#f-q").innerHTML='<div class="done"><div class="ring'+(blue?" blue":"")+'">'+CHECK+'</div><h2>'+h+'</h2><p>'+p+'</p><div class="stats"><div><b>'+L+'</b><span>learned</span></div><div><b>'+S.done.length+'</b><span>of '+rounds.length+' rounds</span></div><div><b>'+S.streakDays+'</b><span>day streak</span></div></div><div class="cta">'+cta+'</div><a class="wa" href="https://wa.me/?text='+encodeURIComponent((S.es?"Estoy practicando el examen de ciudadanía de EE. UU. gratis, "+L+" de "+N+" preguntas aprendidas. Pruébalo: https://uscitizenshipquestions.com/es/":"I'm practicing for the U.S. citizenship test, "+L+" of "+N+" questions learned. Try it free: https://uscitizenshipquestions.com/"))+'" rel="noopener" onclick="event.stopPropagation()">'+(S.es?"Compartir por WhatsApp":"Share on WhatsApp")+'</a></div>';
+  $("#f-q").innerHTML='<div class="done"><div class="ring'+(blue?" blue":"")+'">'+CHECK+'</div><h2>'+h+'</h2><p>'+p+'</p><div class="stats"><div><b>'+L+'</b><span>learned</span></div><div><b>'+S.done.length+'</b><span>of '+rounds.length+' rounds</span></div><div><b>'+S.streakDays+'</b><span>day streak</span></div></div><div class="cta">'+cta+'</div><a class="wa" href="https://wa.me/?text='+encodeURIComponent((S.es?"Estoy practicando el examen de ciudadanía de EE. UU. gratis, "+L+" de "+N+" preguntas aprendidas. Pruébalo: https://citizenshippal.com/es/":"I'm practicing for the U.S. citizenship test, "+L+" of "+N+" questions learned. Try it free: https://citizenshippal.com/"))+'" rel="noopener" onclick="event.stopPropagation()">'+(S.es?"Compartir por WhatsApp":"Share on WhatsApp")+'</a></div>';
   card.className="card enter";requestAnimationFrame(()=>requestAnimationFrame(()=>{card.className="card";}));
   controls.classList.remove("show");chime();buzz([10,40,10]);
   $("#bar").style.width="100%";

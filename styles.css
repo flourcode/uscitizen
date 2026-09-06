@@ -11,7 +11,7 @@ a{color:var(--accent);text-decoration:none}
 header.bar{display:flex;justify-content:space-between;align-items:center;padding:16px 0}
 header.bar .brand{font-weight:700;letter-spacing:-.01em;color:var(--ink);font-size:17px;white-space:nowrap}
 @media (max-width:359px){header.bar .brand{font-size:15px}}
-header.bar .brand img{width:26px;height:26px;border-radius:7px;vertical-align:-7px;margin-right:8px}
+header.bar .brand img{width:30px;height:30px;border-radius:50%;vertical-align:-8px;margin-right:9px}
 .hdr-actions{display:flex;align-items:center;gap:6px;flex:none}
 .menubtn{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:15px;font-weight:600;color:var(--ink);background:none;border:0;padding:10px 8px;border-radius:12px;cursor:pointer;min-height:44px;min-width:44px;justify-content:center}
 
