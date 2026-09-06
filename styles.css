@@ -25,6 +25,7 @@ nav.main{border-bottom:1px solid var(--line);padding-bottom:10px}
 nav.main .menulist{display:none;padding:6px 0 10px}
 nav.main.open .menulist{display:block}
 .mgroup{padding:8px 0}
+.mpanel{display:block}
 .mhead{font-size:12px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
 .mgroup a{display:block;font-size:17px;font-weight:600;color:var(--ink);padding:9px 0;border-bottom:1px solid var(--line)}
 .mgroup a:last-child{border-bottom:0}
@@ -34,12 +35,18 @@ nav.main .langs a{color:var(--accent);padding:4px 0}
 nav.main .langs a[aria-current]{color:var(--ink)}
 @media (min-width:800px){
   .menubtn{display:none}
-  nav.main .menulist{display:flex;gap:6px 36px;padding:8px 0 12px}
-  .mgroup{padding:0}
-  .mgroup a{display:inline-block;font-size:14px;color:var(--ink-2);padding:4px 12px 4px 0;border:0}
-  .mgroup a[aria-current]{color:var(--ink)}
-  .mhead{display:none}
-  nav.main .langs{font-size:14px}
+  nav.main{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 0 6px}
+  nav.main .menulist{display:flex;gap:4px;padding:0}
+  .mgroup{padding:0;position:relative}
+  .mhead{display:block;font-size:15px;font-weight:600;color:var(--ink);text-transform:none;letter-spacing:0;margin:0;padding:8px 12px;border-radius:10px;cursor:pointer;user-select:none}
+  .mhead::after{content:"";display:inline-block;width:6px;height:6px;border-right:1.5px solid var(--ink-3);border-bottom:1.5px solid var(--ink-3);transform:rotate(45deg);margin:0 0 3px 8px}
+  .mgroup:hover .mhead,.mgroup.open .mhead{background:var(--card);box-shadow:var(--shadow-2)}
+  .mgroup .mpanel{display:none;position:absolute;top:100%;left:0;z-index:20;min-width:260px;background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:8px;margin-top:6px}
+  .mgroup:hover .mpanel,.mgroup.open .mpanel{display:block}
+  .mgroup a{display:block;font-size:15px;font-weight:500;color:var(--ink);padding:9px 12px;border:0;border-radius:9px;white-space:nowrap}
+  .mgroup a:hover{background:var(--well)}
+  .mgroup a[aria-current]{color:var(--accent)}
+  nav.main .langs{font-size:14px;padding:0}
 }
 .crumbs{font-size:13px;color:var(--ink-2);margin:8px 0 0}
 .crumbs a{color:var(--ink-2)}
@@ -138,8 +145,10 @@ html[dir=rtl] .teachcard::after{right:auto;left:22px;transform:rotate(-135deg)}
 .bottomcta p{color:var(--ink-2)}
 footer{padding:40px 0 calc(40px + env(safe-area-inset-bottom));font-size:13px;color:var(--ink-3);line-height:1.5}
 footer p+p{margin-top:8px}
-footer nav{margin-top:14px;display:flex;flex-wrap:wrap;gap:6px 14px}
-footer nav a{color:var(--ink-2)}
+footer .fnav{margin-top:22px;display:grid;grid-template-columns:repeat(2,1fr);gap:18px 20px}
+@media (min-width:640px){footer .fnav{grid-template-columns:repeat(4,1fr)}}
+.fhead{font-size:11px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.fcol a{display:block;color:var(--ink-2);font-size:13px;padding:3px 0;line-height:1.35}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 @media (max-width:799px){.pillbtn{display:none}.menubtn{margin-right:-8px}}
 /* right-to-left pages */
