@@ -129,6 +129,10 @@ details.faq p{color:var(--ink-2);margin-top:8px;font-size:15px}
 .teachcard .sub{display:block;font-size:15px;color:var(--ink-2);line-height:1.45}
 .teachcard::after{content:"";position:absolute;top:22px;right:22px;width:8px;height:8px;border-right:2px solid var(--ink-3);border-top:2px solid var(--ink-3);transform:rotate(45deg)}
 html[dir=rtl] .teachcard::after{right:auto;left:22px;transform:rotate(-135deg)}
+.bio{display:flex;align-items:center;gap:16px;background:var(--card);border-radius:18px;padding:16px 18px;box-shadow:var(--shadow-2);margin:6px 0 22px}
+.bio img{width:88px;height:88px;border-radius:50%;object-fit:cover;flex:none}
+.bio b{display:block;font-size:17px;color:var(--ink)}
+.bio span{display:block;font-size:14px;color:var(--ink-2);margin-top:2px;line-height:1.4}
 .bottomcta{text-align:center;padding:40px 0 8px}
 .bottomcta h2{margin-bottom:6px}
 .bottomcta p{color:var(--ink-2)}
