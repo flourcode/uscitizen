@@ -242,6 +242,9 @@ const KEY="civics-trainer.v2";
 const load=()=>{try{const d=JSON.parse(localStorage.getItem(KEY));if(d&&d.v===2)return d;}catch(e){}return null;};
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
 function stat(n){return S.stats[n]||(S.stats[n]={ok:0,miss:0,last:0,box:0});}
+/* analytics events: counts only, nothing personal */
+function track(name,params){try{if(window.gtag)gtag("event",name,params||{});}catch(e){}}
+let answered=0;
 const learned=()=>Object.values(S.stats).filter(x=>x.ok>0).length;
 const solidCount=()=>Object.values(S.stats).filter(x=>x.box>=3).length;
 const missed=()=>BANK.filter(b=>{const x=S.stats[b.n];return x&&(x.miss>0&&x.box<3);}).map(b=>b.n);
@@ -309,6 +312,7 @@ const PRAISE=["Nice.","Yes.","Solid.","That's the one.","Good.","Right.","Easy n
 function answer(ok){
   if(!flipped||!cur||leaving||celebrating)return;leaving=true;
   const st=stat(cur.n);st.last=today();
+  answered++;if(answered%10===0)track("questions_practiced",{count:10});
   if(ok){st.ok++;st.box=Math.min(st.box+1,4);doneCount++;runStreak++;retrySet.delete(cur.n);
     praise(runStreak>=5&&runStreak%5===0?runStreak+" in a row":PRAISE[Math.floor(Math.random()*PRAISE.length)]);ding(true);buzz(12);}
   else{st.miss++;st.box=0;runStreak=0;if(!retrySet.has(cur.n))missesThisRound++;retrySet.add(cur.n);
@@ -326,6 +330,7 @@ function celebrate(){
   celebrating=true;flipped=true;cur=null;
   if(!testMode&&round&&!S.done.includes(round.id)&&!round.transient)S.done.push(round.id);
   save();
+  if(testMode)track("practice_test",{result:testRight>=12?"pass":"not_yet",right:testRight,asked:testAsked});else if(round&&round.transient)track("review_complete",{});else if(round)track("round_complete",{round:round.id,missed:missesThisRound,learned:learned()});
   const next=nextRoundFor();const L=learned(),N=rounds.flatMap(r=>r.ids).length;
   let h,p,cta,blue=false;
   if(testMode){const pass=testRight>=12;h=pass?"That's a pass.":"Not yet.";p=testRight+" right out of "+testAsked+" asked. The officer stops at 12 right or 9 wrong.";cta=pass?"Tap to keep practicing":"Tap to try again";blue=!pass;}
@@ -427,7 +432,7 @@ let first=nextRoundFor()||rounds[0];
 const sec=qp.get("section");const secName=Object.keys(SLUGS).find(k=>SLUGS[k]===sec);
 if(secName){const r=rounds.find(r=>r.title===secName);if(r)first=r;}
 if(qp.toString())history.replaceState(null,"",location.pathname);
-save();renderVoice();
+save();renderVoice();track("trainer_open",{learned:learned(),senior:S.senior,es:S.es});
 if(startTest)startRound({id:"test",title:"Practice test",transient:true,ids:BANK.filter(b=>!S.senior||b.star).map(b=>b.n)},{shuffle:true,test:true});else startRound(first);
 let primed=false;document.addEventListener("pointerdown",()=>{if(primed)return;primed=true;if(S.voice&&cur&&!flipped&&canSpeak&&!speechSynthesis.speaking)say(cur.q,$("#f-speak"));},{once:true,capture:true});
 </script>

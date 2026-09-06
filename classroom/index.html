@@ -211,8 +211,9 @@ async function showQuestion(q,id){
   await say(main);if(!alive(id))return;
   await wait(opts.after*1000);
 }
-$("#start").onclick=()=>start(false);$("#fs").onclick=()=>start(true);
-$("#startdeck").onclick=()=>startDeck(false);$("#fsdeck").onclick=()=>startDeck(true);
+function track(n,p){try{if(window.gtag)gtag("event",n,p||{});}catch(e){}}
+$("#start").onclick=()=>{track("classroom_start",{set:$("#set").value,record:on("record")});start(false);};$("#fs").onclick=()=>{track("classroom_start",{set:$("#set").value,record:on("record")});start(true);};
+$("#startdeck").onclick=()=>{track("classroom_present",{deck:$("#deck").value});startDeck(false);};$("#fsdeck").onclick=()=>{track("classroom_present",{deck:$("#deck").value});startDeck(true);};
 
 /* ---------- topic decks ---------- */
 let deck=null,slideIdx=0,deckMode=false,autoAdv=false,qManual=false;
