@@ -75,10 +75,12 @@
   .slide .item.li::before{content:"";position:absolute;left:0;top:.55em;width:.45em;height:.45em;border-radius:50%;background:var(--accent)}
   .slide .item b{font-weight:700}
   .slide .quote{font-size:clamp(20px,min(2.8vw,4.8vh),46px);font-weight:600;line-height:1.3;max-width:34ch;color:var(--ink)}
-  .paused{position:absolute;top:3vh;right:3vw;font-size:14px;font-weight:700;color:var(--accent);background:var(--card);padding:6px 12px;border-radius:999px;box-shadow:var(--shadow-2);display:none}
+  .paused{position:absolute;top:3vh;right:3vw;font-size:clamp(14px,1.6vw,20px);font-weight:700;color:var(--accent);background:var(--card);padding:8px 16px;border-radius:999px;box-shadow:var(--shadow-2);display:none}
   body.paused .paused{display:block}
   .exit{position:absolute;top:2vh;left:2vw;background:none;border:0;color:var(--ink-3);font-size:14px;font-weight:600;cursor:pointer;padding:8px}
   body.record .exit,body.record .counter{opacity:0}
+  body.record .exit{pointer-events:none}
+  html{background:var(--bg)}
   @media (prefers-reduced-motion:reduce){.a,.also,.ring .fg{transition:none}}
 </style>
 </head>
@@ -119,7 +121,7 @@
 <div class="stage" id="stage">
   <button class="exit" id="exit">Exit</button>
   <div class="counter" id="counter"></div>
-  <div class="paused">Paused</div>
+  <div class="paused">Paused · tap to continue</div>
   <div id="body"></div>
   <div class="brand"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="#7CB583"/><circle cx="14" cy="16" r="2.4" fill="#2D5033"/><circle cx="26" cy="16" r="2.4" fill="#2D5033"/><path d="M12 24 Q20 31 28 24" fill="none" stroke="#2D5033" stroke-width="2.8" stroke-linecap="round"/></svg><b>CitizenshipPal.com</b> · free citizenship test practice, no account</div>
 </div>
@@ -130,7 +132,8 @@ const DECKS=[{"id": "citizenship-interview", "title": "What happens at the citiz
 const $=s=>document.querySelector(s);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
 const WORDS=["","one","two","three","four","five"];
-let opts={},list=[],i=0,playing=false,paused=false,timer=null,phase="",fullscreen=false;
+let opts={},list=[],i=0,playing=false,paused=false,timer=null,phase="",fullscreen=false,run_id=0;
+const alive=id=>playing&&id===run_id;
 document.querySelectorAll(".switch").forEach(b=>b.onclick=()=>b.setAttribute("aria-checked",b.getAttribute("aria-checked")!=="true"));
 const on=id=>$("#"+id).getAttribute("aria-checked")==="true";
 function applyTheme(){const t=$("#theme").value;document.documentElement.classList.remove("light","dark");if(t!=="auto")document.documentElement.classList.add(t);}
@@ -150,35 +153,38 @@ function mainAnswer(q){const k=q.k||1,p=q.a.slice(0,k);if(q.vary){if(OFFQ[q.n]&&
 function say(t){if(!opts.voice||!("speechSynthesis" in window))return Promise.resolve();return new Promise(res=>{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="en-US";u.rate=0.92;
   const vs=speechSynthesis.getVoices(),v=vs.find(v=>v.lang==="en-US"&&/Samantha|Ava|Google US|Aria|Jenny/.test(v.name))||vs.find(v=>v.lang==="en-US");if(v)u.voice=v;
   u.onend=u.onerror=()=>res();speechSynthesis.speak(u);setTimeout(res,Math.max(12000,t.length*90));});}
-const wait=ms=>new Promise(r=>{timer=setTimeout(r,ms);});
+const wait=ms=>new Promise(r=>{const t=setTimeout(r,ms);timers.push(t);});
+const timers=[];function clearTimers(){while(timers.length)clearTimeout(timers.pop());}
 async function waitUnpaused(){while(paused&&playing)await new Promise(r=>setTimeout(r,120));}
+function waitForAdvance(){return new Promise(r=>{advanceResolve=r;});}
 
 function start(fs){
   opts={pause:+$("#pause").value||0,after:+$("#after").value||0,voice:on("voice"),alts:on("alts"),hide:on("hide"),record:on("record"),title:$("#vtitle").value.trim(),manual:$("#qadvance").value==="manual"};
-  list=build();i=0;playing=true;paused=false;qManual=opts.manual;applyTheme();
+  list=build();i=0;playing=true;paused=false;qManual=opts.manual;deckMode=false;applyTheme();
   document.body.classList.add("playing");document.body.classList.toggle("record",opts.record);
   if(fs&&document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(()=>{});
-  run();
+  restart(run);
 }
-function stop(){playing=false;paused=false;deckMode=false;qManual=false;advanceResolve=null;clearTimeout(timer);if(window.speechSynthesis)speechSynthesis.cancel();document.body.classList.remove("playing","paused");if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});}
+function restart(fn){clearTimers();if(window.speechSynthesis)speechSynthesis.cancel();advanceResolve=null;paused=false;document.body.classList.remove("paused");run_id++;const id=run_id;playing=true;setTimeout(()=>{if(id===run_id)fn(id).catch(()=>{});},30);}
+function stop(){playing=false;paused=false;deckMode=false;qManual=false;advanceResolve=null;clearTimers();run_id++;if(window.speechSynthesis)speechSynthesis.cancel();document.body.classList.remove("playing","paused");if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});}
 
-async function run(){
+async function run(id){
   const set=$("#set").value;
-  if(opts.record){
+  if(opts.record&&i===0){
     const sub=set==="test"?"20 questions. Say your answer out loud before it appears.":set==="6520"?"The 20 questions for applicants 65 and older with 20 years of residency.":set.startsWith("all")||set==="shuffle"?"All 128 official questions with answers.":set+": every question in this section.";
-    card(`<div class="title">${esc(opts.title)}</div><div class="subtitle">${esc(sub)}</div>`);await wait(4000);if(!playing)return;
+    card(`<div class="title">${esc(opts.title)}</div><div class="subtitle">${esc(sub)}</div>`);await wait(4000);if(!alive(id))return;
   }
-  while(playing&&i<list.length){
-    await showQuestion(list[i]);if(!playing)return;
+  while(alive(id)&&i<list.length){
+    await showQuestion(list[i],id);if(!alive(id))return;
     i++;
   }
-  if(!playing)return;
+  if(!alive(id))return;
   card(`<div class="title">${opts.record?"Practice all 128 free.":"That's the set."}</div><div class="subtitle">${opts.record?"CitizenshipPal.com. No account, no cost. Questions read aloud, answers you say out loud.":"Press Esc or tap Exit to choose another set."}</div>`);
-  if(opts.record){await wait(6000);if(playing)stop();}
+  if(opts.record){await wait(6000);if(alive(id))stop();}
 }
 function card(html){$("#body").innerHTML=html;}
 function esc(t){return t.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
-async function showQuestion(q){
+async function showQuestion(q,id){
   $("#counter").textContent=(i+1)+" of "+list.length;
   const main=mainAnswer(q),k=q.k||1,rest=q.vary?[]:q.a.slice(k);
   const need=k>1?` <span style="color:var(--accent)">(name ${WORDS[k]})</span>`:"";
@@ -186,21 +192,22 @@ async function showQuestion(q){
     <div class="ring" id="ring"${opts.hide&&opts.pause>0&&!qManual?"":' style="display:none"'}><svg viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="44"/><circle class="fg" id="fg" cx="50" cy="50" r="44" stroke-dasharray="276.5" stroke-dashoffset="0"/></svg><span id="count">${opts.pause}</span></div>
     <div class="a" id="ans">${esc(main)}</div>
     <div class="also" id="also">${opts.alts&&rest.length?"Also accepted: "+esc(rest.slice(0,6).join(" · "))+(rest.length>6?" · and more":""):""}</div>`);
-  await waitUnpaused();if(!playing)return;
-  await say(q.q);if(!playing)return;
+  const el=s=>document.querySelector(s);
+  await waitUnpaused();if(!alive(id))return;
+  await say(q.q);if(!alive(id))return;
   if(qManual){
-    if(opts.hide){$("#ring").style.display="none";await waitForAdvance();if(!playing)return;}
-    $("#ans").classList.add("show");$("#also").classList.add("show");
-    await say(main);if(!playing)return;
+    if(opts.hide){if(el("#ring"))el("#ring").style.display="none";await waitForAdvance();if(!alive(id))return;}
+    if(el("#ans"))el("#ans").classList.add("show");if(el("#also"))el("#also").classList.add("show");
+    await say(main);if(!alive(id))return;
     await waitForAdvance();return;
   }
   if(opts.hide&&opts.pause>0){
-    for(let s=opts.pause;s>0;s--){await waitUnpaused();if(!playing)return;$("#count").textContent=s;$("#fg").style.strokeDashoffset=(276.5*(1-s/opts.pause)).toFixed(1);await wait(1000);}
-    $("#ring").style.visibility="hidden";
+    for(let s=opts.pause;s>0;s--){await waitUnpaused();if(!alive(id))return;if(el("#count"))el("#count").textContent=s;if(el("#fg"))el("#fg").style.strokeDashoffset=(276.5*(1-s/opts.pause)).toFixed(1);await wait(1000);}
+    if(el("#ring"))el("#ring").style.visibility="hidden";
   }
-  await waitUnpaused();if(!playing)return;
-  $("#ans").classList.add("show");$("#also").classList.add("show");
-  await say(main);if(!playing)return;
+  await waitUnpaused();if(!alive(id))return;
+  if(el("#ans"))el("#ans").classList.add("show");if(el("#also"))el("#also").classList.add("show");
+  await say(main);if(!alive(id))return;
   await wait(opts.after*1000);
 }
 $("#start").onclick=()=>start(false);$("#fs").onclick=()=>start(true);
@@ -212,34 +219,33 @@ function stripTags(h){const d=document.createElement("div");d.innerHTML=h;return
 function startDeck(fs){
   deck=DECKS.find(d=>d.id===$("#deck").value);if(!deck)return;
   opts={pause:0,after:+$("#slidepause").value||0,voice:on("voice"),alts:false,hide:false,record:on("record"),title:deck.title};
-  autoAdv=$("#advance").value==="auto";deckMode=true;list=deck.slides;i=0;playing=true;paused=false;applyTheme();
+  autoAdv=$("#advance").value==="auto";deckMode=true;qManual=false;list=deck.slides;i=0;playing=true;paused=false;applyTheme();
   document.body.classList.add("playing");document.body.classList.toggle("record",opts.record);
   if(fs&&document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(()=>{});
-  runDeck();
+  restart(runDeck);
 }
-async function runDeck(){
-  if(opts.record){card(`<div class="title">${esc(deck.title)}</div><div class="subtitle">${esc(deck.lede)}</div>`);await say(deck.title+". "+deck.lede);await wait(1500);if(!playing)return;}
-  while(playing&&i<list.length){
-    await showSlide(list[i]);if(!playing)return;
-    if(autoAdv){i++;}else{await waitForAdvance();if(!playing)return;}
+async function runDeck(id){
+  if(opts.record&&i===0){card(`<div class="title">${esc(deck.title)}</div><div class="subtitle">${esc(deck.lede)}</div>`);await say(deck.title+". "+deck.lede);await wait(1500);if(!alive(id))return;}
+  while(alive(id)&&i<list.length){
+    await showSlide(list[i],id);if(!alive(id))return;
+    if(autoAdv){i++;}else{await waitForAdvance();if(!alive(id))return;}
   }
-  if(!playing)return;
+  if(!alive(id))return;
   card(`<div class="title">${opts.record?"More at CitizenshipPal.com":"End of topic"}</div><div class="subtitle">${opts.record?"All 128 civics questions, a free practice trainer, and guides to every part of the interview. No account.":"Press Esc or tap Exit to choose another topic."}</div>`);
-  if(opts.record){await say("More at citizenship pal dot com.");await wait(4000);if(playing)stop();}
+  if(opts.record){await say("More at citizenship pal dot com.");await wait(4000);if(alive(id))stop();}
 }
 let advanceResolve=null;
-function waitForAdvance(){return new Promise(r=>{advanceResolve=r;});}
-async function showSlide(sl){
+async function showSlide(sl,id){
   $("#counter").textContent=(i+1)+" of "+list.length;
   const isQuote=sl.items.length===1&&sl.items[0].t==="p"&&sl.h.toLowerCase().startsWith("the oath");
   card(`<div class="slide"><div class="deck">${esc(deck.title)}</div>`+(sl.h?`<h2>${esc(sl.h)}</h2>`:"")+sl.items.map(it=>`<div class="item ${it.t}${isQuote?" quote":""}">${it.h}</div>`).join("")+`</div>`);
-  await waitUnpaused();if(!playing)return;
+  await waitUnpaused();if(!alive(id))return;
   const text=(sl.h?sl.h+". ":"")+sl.items.map(it=>stripTags(it.h)).join(" ");
-  if(opts.voice){await say(text);if(!playing)return;}
+  if(opts.voice){await say(text);if(!alive(id))return;}
   if(autoAdv)await wait(opts.after*1000);
 }
-function nextSlide(){if(!deckMode)return;if(advanceResolve){const r=advanceResolve;advanceResolve=null;i++;r();}else{clearTimeout(timer);if(window.speechSynthesis)speechSynthesis.cancel();i=Math.min(list.length,i+1);playing=false;setTimeout(()=>{playing=true;runDeck();},50);}}
-function prevSlide(){if(!deckMode)return;clearTimeout(timer);if(window.speechSynthesis)speechSynthesis.cancel();advanceResolve=null;i=Math.max(0,i-1);playing=false;setTimeout(()=>{playing=true;runDeck();},50);}
+function nextSlide(){if(!deckMode)return;if(advanceResolve){const r=advanceResolve;advanceResolve=null;i++;r();}else{i=Math.min(list.length,i+1);restart(runDeck);}}
+function prevSlide(){if(!deckMode)return;i=Math.max(0,i-1);restart(runDeck);}
 $("#exit").onclick=e=>{e.stopPropagation();stop();};
 function advanceQ(){if(advanceResolve){const r=advanceResolve;advanceResolve=null;r();}}
 $("#stage").onclick=()=>{if(deckMode&&!autoAdv){nextSlide();return;}if(qManual){advanceQ();return;}paused=!paused;document.body.classList.toggle("paused",paused);};
@@ -249,10 +255,10 @@ document.addEventListener("keydown",e=>{
   if(e.key==="Escape")stop();
   if(deckMode){if(e.key==="ArrowRight"||e.key===" "){e.preventDefault();nextSlide();}if(e.key==="ArrowLeft")prevSlide();if(e.key==="Escape")stop();return;}
   if(qManual&&(e.key===" "||e.key==="ArrowRight")&&advanceResolve){e.preventDefault();advanceQ();return;}
-  if(e.key==="ArrowRight"){clearTimeout(timer);if(window.speechSynthesis)speechSynthesis.cancel();i=Math.min(list.length,i+1);playing=false;setTimeout(()=>{playing=true;run();},50);}
-  if(e.key==="ArrowLeft"){clearTimeout(timer);if(window.speechSynthesis)speechSynthesis.cancel();i=Math.max(0,i-1);playing=false;setTimeout(()=>{playing=true;run();},50);}
+  if(e.key==="ArrowRight"){i=Math.min(list.length,i+1);restart(run);}
+  if(e.key==="ArrowLeft"){i=Math.max(0,i-1);restart(run);}
 });
-document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement&&playing&&opts.record){}});
+setInterval(()=>{if(!playing)return;if(document.getElementById("body").innerHTML.trim()==="")restart(deckMode?runDeck:run);},1500);
 </script>
 </body>
 </html>
