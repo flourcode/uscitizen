@@ -123,11 +123,12 @@ details.faq p{color:var(--ink-2);margin-top:8px;font-size:15px}
 .prevnext a.next{text-align:right}
 .vocab{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 6px}
 .vocab span{background:var(--card);border-radius:10px;padding:6px 11px;font-size:15px;box-shadow:var(--shadow-2)}
-.teachcard{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:28px auto 0;max-width:680px;background:var(--card);border-radius:18px;padding:18px 20px;box-shadow:var(--shadow-2);color:var(--ink);border-left:5px solid var(--good)}
-.teachcard b{display:block;font-size:17px;margin-bottom:3px}
-.teachcard span{font-size:15px;color:var(--ink-2)}
-.teachcard .go{flex:none;color:var(--accent);font-weight:600;font-size:15px;white-space:nowrap}
-html[dir=rtl] .teachcard{border-left:0;border-right:5px solid var(--good)}
+.teachcard{display:block;margin:28px auto 0;max-width:680px;background:var(--card);border-radius:18px;padding:18px 20px;box-shadow:var(--shadow-2);color:var(--ink);position:relative}
+.teachcard .eyebrow{display:block;font-size:12px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.teachcard b{display:block;font-size:18px;letter-spacing:-.01em;margin-bottom:4px;padding-right:28px}
+.teachcard .sub{display:block;font-size:15px;color:var(--ink-2);line-height:1.45}
+.teachcard::after{content:"";position:absolute;top:22px;right:22px;width:8px;height:8px;border-right:2px solid var(--ink-3);border-top:2px solid var(--ink-3);transform:rotate(45deg)}
+html[dir=rtl] .teachcard::after{right:auto;left:22px;transform:rotate(-135deg)}
 .bottomcta{text-align:center;padding:40px 0 8px}
 .bottomcta h2{margin-bottom:6px}
 .bottomcta p{color:var(--ink-2)}
