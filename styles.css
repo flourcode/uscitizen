@@ -140,6 +140,18 @@ html[dir=rtl] .teachcard::after{right:auto;left:22px;transform:rotate(-135deg)}
 .bio img{width:88px;height:88px;border-radius:50%;object-fit:cover;flex:none}
 .bio b{display:block;font-size:17px;color:var(--ink)}
 .bio span{display:block;font-size:14px;color:var(--ink-2);margin-top:2px;line-height:1.4}
+.projector{display:block;background:var(--card);border-radius:20px;box-shadow:var(--shadow);padding:18px 22px 16px;margin:14px 0 14px;color:var(--ink);text-align:center;position:relative}
+.pj-top{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--ink-2)}
+.pj-q{font-size:clamp(22px,4.6vw,30px);font-weight:700;letter-spacing:-.02em;line-height:1.15;margin:18px auto 12px;max-width:22ch;text-wrap:balance}
+.pj-ring{width:52px;height:52px;margin:0 auto;position:relative}
+.pj-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.pj-ring circle{fill:none;stroke-width:8;stroke:var(--line)}
+.pj-ring circle.fg{stroke:var(--accent);stroke-linecap:round;stroke-dasharray:276.5;stroke-dashoffset:110}
+.pj-ring span{position:absolute;inset:0;display:grid;place-items:center;font-weight:700;font-size:18px}
+.pj-a{font-size:clamp(22px,4.6vw,28px);font-weight:700;color:var(--good);margin-top:12px;letter-spacing:-.02em}
+.pj-brand{display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:600;color:var(--ink-3);margin-top:16px}
+.ctarow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.ctarow .cta{margin-top:0}
 .bottomcta{text-align:center;padding:40px 0 8px}
 .bottomcta h2{margin-bottom:6px}
 .bottomcta p{color:var(--ink-2)}
